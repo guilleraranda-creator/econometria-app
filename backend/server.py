@@ -1,21 +1,25 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 
+# Crear la app
 app = Flask(__name__)
 
-@app.route("/square", methods=["POST"])
-def square_number():
-    data = request.json
-    number = data.get("number", None)
+# Activar CORS para permitir peticiones desde cualquier origen
+CORS(app)
 
-    if number is None:
-        return jsonify({"error": "No number provided"}), 400
-
-    result = number ** 2
-    return jsonify({"result": result})
-
-@app.route("/")
+# Ruta de prueba
+@app.route("/", methods=["GET"])
 def home():
     return "Backend funcionando correctamente"
 
+# Ruta para el cálculo
+@app.route("/square", methods=["POST"])
+def square():
+    data = request.get_json()
+    numero = data.get("number", 0)
+    resultado = numero ** 2
+    return jsonify({"result": resultado})
+
+# Ejecutar la app
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=3000)
+    app.run(host="0.0.0.0", port=5000)
